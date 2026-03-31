@@ -1,8 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import Layout from '@theme/Layout';
 import BrowserOnly from '@docusaurus/BrowserOnly';
-import useGlobalData from '@docusaurus/useGlobalData';
-import GraphCanvas from '../GraphCanvas';
+import { useGlobalData } from '@docusaurus/useGlobalData';
 import styles from './styles.module.css';
 
 export default function GraphView() {
@@ -13,7 +12,6 @@ export default function GraphView() {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedNode, setSelectedNode] = useState(null);
   
-  // Find linked documents for the selected node
   const linkedDocs = useMemo(() => {
     if (!selectedNode || !data) return [];
     const nodeIds = new Set();
@@ -23,7 +21,6 @@ export default function GraphView() {
       if (s === selectedNode.id) nodeIds.add(t);
       if (t === selectedNode.id) nodeIds.add(s);
     });
-    // If it's a tag, show notes. If it's a note, show tags.
     return data.nodes.filter(n => 
       nodeIds.has(n.id) && 
       n.group !== 'category' && 
@@ -31,7 +28,6 @@ export default function GraphView() {
     );
   }, [selectedNode, data]);
 
-  // Grouped search results
   const searchResults = useMemo(() => {
     if (!data || !searchTerm || searchTerm.length < 2) return null;
     const term = searchTerm.toLowerCase();
@@ -55,19 +51,22 @@ export default function GraphView() {
   const selectedNodeUrl = getDocUrl(selectedNode);
 
   return (
-    <Layout title="Knowledge Graph" description="Interactive graph view of my second brain">
+    <Layout title='Knowledge Graph' description='Interactive graph view of my second brain'>
       <div className={styles.explorerContainer}>
         <div className={styles.graphWrapper}>
           <div className={styles.graphContainer}>
             {data ? (
               <BrowserOnly fallback={<div className={styles.loading}>Loading graph...</div>}>
-                {() => (
-                  <GraphCanvas 
-                    data={data} 
-                    searchTerm={searchTerm} 
-                    onNodeClick={setSelectedNode}
-                  />
-                )}
+                {() => {
+                  const GraphCanvas = require('../GraphCanvas').default;
+                  return (
+                    <GraphCanvas 
+                      data={data} 
+                      searchTerm={searchTerm} 
+                      onNodeClick={setSelectedNode}
+                    />
+                  );
+                }}
               </BrowserOnly>
             ) : (
               <div className={styles.loading}>Loading graph...</div>
@@ -76,8 +75,8 @@ export default function GraphView() {
             <div className={styles.controlPanel}>
               <div className={styles.searchSection}>
                 <input 
-                  type="text" 
-                  placeholder="Search tags or notes..." 
+                  type='text' 
+                  placeholder='Search tags or notes...' 
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   className={styles.searchBar}

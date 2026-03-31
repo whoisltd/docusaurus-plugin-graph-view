@@ -110,7 +110,7 @@ export default function GraphCanvas({ data, searchTerm, onNodeClick }) {
   const HUB_GREEN = '#2ecc71';
 
   const paintNode = (node, ctx, globalScale) => {
-    const isDark = document.documentElement.dataset.theme === 'dark';
+    const isDark = typeof document !== 'undefined' && document.documentElement.dataset.theme === 'dark';
     const isTag = node.group === 'tags';
     const radius = isTag ? radiusScale(node.degree) : 3.5; // Small fixed size for blogs
     
