@@ -1,0 +1,33 @@
+{
+  "name": "docusaurus-plugin-graph-view",
+  "version": "1.0.0",
+  "description": "An Obsidian-style interactive knowledge graph for Docusaurus.",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/whoisltd/docusaurus-plugin-graph-view.git"
+  },
+  "keywords": [
+    "docusaurus",
+    "plugin",
+    "graph",
+    "knowledge-graph",
+    "obsidian",
+    "force-directed"
+  ],
+  "author": "whoisltd",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/whoisltd/docusaurus-plugin-graph-view/issues"
+  },
+  "homepage": "https://github.com/whoisltd/docusaurus-plugin-graph-view#readme",
+  "peerDependencies": {
+    "@docusaurus/core": "^3.0.0"
+  },
+  "dependencies": {
+    "gray-matter": "^4.0.3",
+    "react-force-graph-2d": "^1.29.1",
+    "d3": "^7.9.0",
+    "clsx": "^2.1.1"
+  }
+}
