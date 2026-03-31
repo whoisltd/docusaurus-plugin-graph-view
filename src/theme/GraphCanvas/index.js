@@ -1,12 +1,18 @@
 import React, { useMemo, useState, useRef, useEffect } from 'react';
-import ForceGraph2D from 'react-force-graph-2d';
 import * as d3 from 'd3';
 
 export default function GraphCanvas({ data, searchTerm, onNodeClick }) {
   const fgRef = useRef();
+  const [ForceGraph2D, setForceGraph2D] = useState(null);
   const [hoverNode, setHoverNode] = useState(null);
   const [highlightNodes, setHighlightNodes] = useState(new Set());
   const [highlightLinks, setHighlightLinks] = useState(new Set());
+
+  useEffect(() => {
+    import('react-force-graph-2d').then(mod => {
+      setForceGraph2D(() => mod.default);
+    });
+  }, []);
 
   // Pre-process data and build adjacency list for O(1) neighbor lookup
   const { graphData, adjacencyList } = useMemo(() => {
@@ -84,7 +90,7 @@ export default function GraphCanvas({ data, searchTerm, onNodeClick }) {
   };
 
   useEffect(() => {
-    if (!fgRef.current) return;
+    if (!fgRef.current || !ForceGraph2D) return;
     
     // Pull clusters together: Moderate repulsion, short tight links
     fgRef.current.d3Force('charge').strength(-150);
@@ -104,7 +110,7 @@ export default function GraphCanvas({ data, searchTerm, onNodeClick }) {
     }, 1500);
 
     return () => clearTimeout(timer);
-  }, [graphData]);
+  }, [graphData, ForceGraph2D]);
 
   const PURPLE = '#a855f7';
   const HUB_GREEN = '#2ecc71';
@@ -165,6 +171,8 @@ export default function GraphCanvas({ data, searchTerm, onNodeClick }) {
     ctx.globalAlpha = 1;
   };
 
+  if (!ForceGraph2D) return <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>Loading Graph Engine...</div>;
+
   return (
     <div style={{ width: '100%', height: '100%', position: 'absolute' }}>
       <ForceGraph2D
@@ -173,7 +181,7 @@ export default function GraphCanvas({ data, searchTerm, onNodeClick }) {
         nodeCanvasObject={paintNode}
         onNodeHover={handleNodeHover}
         onNodeClick={onNodeClick}
-        linkColor={link => highlightLinks.has(link) ? PURPLE : (document.documentElement.dataset.theme === 'dark' ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)')}
+        linkColor={link => highlightLinks.has(link) ? PURPLE : (typeof document !== 'undefined' && document.documentElement.dataset.theme === 'dark' ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)')}
         linkWidth={link => highlightLinks.has(link) ? 2 : 1}
         linkDirectionalParticles={link => highlightLinks.has(link) ? 2 : 0}
         linkDirectionalParticleWidth={2}
