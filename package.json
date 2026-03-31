@@ -1,6 +1,6 @@
 {
   "name": "docusaurus-plugin-graph-view",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "An interactive knowledge graph for Docusaurus.",
   "main": "index.js",
   "repository": {
