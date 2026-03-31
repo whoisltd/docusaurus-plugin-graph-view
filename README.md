@@ -5,7 +5,9 @@
 
 > An interactive, knowledge graph for your [Docusaurus](https://docusaurus.io/) site.
 
-![demo](./demo.gif)
+<p align="center">
+  <img src="./demo.gif" alt="demo" />
+</p>
 
 ## Features
 
