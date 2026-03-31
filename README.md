@@ -1,9 +1,9 @@
 # docusaurus-plugin-graph-view
 
-> An Obsidian-style interactive knowledge graph for your Docusaurus site.
+> An interactive knowledge graph for your Docusaurus site.
 
 ## Features
-- **Obsidian Core Mechanics:** Elastic dragging, 2D Canvas rendering, and reactive purple highlighting.
+- **Core Mechanics:** Elastic dragging, 2D Canvas rendering, and reactive highlighting.
 - **Smart Readability:** Semantic zooming hides labels until you zoom close or hover.
 - **Multi-Path Scanning:** Aggregate notes from multiple directories (e.g., `docs` and `blog`).
 - **Deep Navigation:** Automatic URL mapping for nested folder structures.

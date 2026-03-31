@@ -1,7 +1,7 @@
 {
   "name": "docusaurus-plugin-graph-view",
   "version": "1.0.0",
-  "description": "An Obsidian-style interactive knowledge graph for Docusaurus.",
+  "description": "An interactive knowledge graph for Docusaurus.",
   "main": "index.js",
   "repository": {
     "type": "git",
