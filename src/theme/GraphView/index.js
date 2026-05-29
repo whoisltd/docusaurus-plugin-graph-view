@@ -4,6 +4,11 @@ import BrowserOnly from '@docusaurus/BrowserOnly';
 import useGlobalData from '@docusaurus/useGlobalData';
 import styles from './styles.module.css';
 
+const LINK_TYPE_CONFIG = {
+  tag:  { color: '#888888', label: 'Tag Links',  icon: '●', dashLabel: 'solid' },
+  link: { color: '#3b82f6', label: 'Doc Links',  icon: '●', dashLabel: 'dashed' },
+};
+
 export default function GraphView() {
   const globalData = useGlobalData();
   const pluginData = globalData['docusaurus-plugin-graph-view']?.['default'] || {};
@@ -11,6 +16,36 @@ export default function GraphView() {
 
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedNode, setSelectedNode] = useState(null);
+  const [visibleLinkTypes, setVisibleLinkTypes] = useState(new Set(['tag', 'link']));
+
+  // Count edges by type
+  const linkTypeCounts = useMemo(() => {
+    if (!data) return {};
+    const counts = {};
+    data.links.forEach(l => {
+      const type = l.type || 'tag';
+      counts[type] = (counts[type] || 0) + 1;
+    });
+    return counts;
+  }, [data]);
+
+  // Only show filter options for types that exist in the data
+  const availableLinkTypes = useMemo(() => {
+    return Object.keys(LINK_TYPE_CONFIG).filter(type => linkTypeCounts[type] > 0);
+  }, [linkTypeCounts]);
+
+  const toggleLinkType = (type) => {
+    setVisibleLinkTypes(prev => {
+      const next = new Set(prev);
+      if (next.has(type)) {
+        // Don't allow hiding all types
+        if (next.size > 1) next.delete(type);
+      } else {
+        next.add(type);
+      }
+      return next;
+    });
+  };
   
   const linkedDocs = useMemo(() => {
     if (!selectedNode || !data) return [];
@@ -25,6 +60,23 @@ export default function GraphView() {
       nodeIds.has(n.id) && 
       n.group !== 'category' && 
       (selectedNode.group === 'tags' ? n.group !== 'tags' : n.group === 'tags')
+    );
+  }, [selectedNode, data]);
+
+  // Get doc-to-doc linked documents (non-tag connections)
+  const linkedByDocLink = useMemo(() => {
+    if (!selectedNode || !data || selectedNode.group === 'tags') return [];
+    const nodeIds = new Set();
+    data.links.forEach(l => {
+      const type = l.type || 'tag';
+      if (type === 'tag') return; // skip tag edges
+      const s = typeof l.source === 'object' ? l.source.id : l.source;
+      const t = typeof l.target === 'object' ? l.target.id : l.target;
+      if (s === selectedNode.id) nodeIds.add(t);
+      if (t === selectedNode.id) nodeIds.add(s);
+    });
+    return data.nodes.filter(n => 
+      nodeIds.has(n.id) && n.group !== 'tags'
     );
   }, [selectedNode, data]);
 
@@ -64,6 +116,8 @@ export default function GraphView() {
                       data={data} 
                       searchTerm={searchTerm} 
                       onNodeClick={setSelectedNode}
+                      selectedNode={selectedNode}
+                      visibleLinkTypes={visibleLinkTypes}
                     />
                   );
                 }}
@@ -108,8 +162,33 @@ export default function GraphView() {
                 )}
               </div>
 
+              {/* Link Type Filters */}
+              {availableLinkTypes.length > 1 && (
+                <div className={styles.filterSection}>
+                  <h4>Connections</h4>
+                  <div className={styles.filterList}>
+                    {availableLinkTypes.map(type => {
+                      const config = LINK_TYPE_CONFIG[type];
+                      const isActive = visibleLinkTypes.has(type);
+                      return (
+                        <button
+                          key={type}
+                          className={`${styles.filterBtn} ${isActive ? styles.filterBtnActive : ''}`}
+                          onClick={() => toggleLinkType(type)}
+                          title={`${isActive ? 'Hide' : 'Show'} ${config.label}`}
+                        >
+                          <span className={styles.filterLine} data-type={type} style={{ borderColor: config.color }} />
+                          <span className={styles.filterLabel}>{config.label}</span>
+                          <span className={styles.filterCount}>{linkTypeCounts[type]}</span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+
               <div className={styles.legend}>
-                <h4>Legend</h4>
+                <h4>Nodes</h4>
                 <ul>
                   <li><span className={styles.legendColor} style={{background: '#444444'}}></span> Documents</li>
                   <li><span className={styles.legendColor} style={{background: '#2ecc71'}}></span> Tags</li>
@@ -152,6 +231,19 @@ export default function GraphView() {
                 {selectedNode.tags && selectedNode.tags.map(tag => (
                   <span key={tag} className={styles.tag}>#{tag}</span>
                 ))}
+              </div>
+            )}
+
+            {selectedNode.group !== 'tags' && linkedByDocLink.length > 0 && (
+              <div className={styles.connectionSection}>
+                <h3>🔗 Linked Documents</h3>
+                <ul className={styles.linkedList}>
+                  {linkedByDocLink.map(doc => (
+                    <li key={doc.id} onClick={() => setSelectedNode(doc)} className={styles.linkedItem}>
+                      📄 {doc.name}
+                    </li>
+                  ))}
+                </ul>
               </div>
             )}
             

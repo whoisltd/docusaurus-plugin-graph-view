@@ -14,6 +14,8 @@
 - **Force-Directed Graph** — Powered by [d3-force](https://github.com/d3/d3-force) and rendered on 2D Canvas for smooth performance, even with large document sets.
 - **Semantic Zoom** — Labels appear progressively as you zoom in; tag and neighbor labels are always visible on hover.
 - **Tag-Based Clustering** — Frontmatter `tags` are automatically extracted and rendered as hub nodes, connecting related documents visually.
+- **Inline-Link Detection** — Automatically discovers `[links](./between-docs.md)` and creates edges, so interconnected notes show their relationships.
+- **Wikilink Support** — Opt-in `[[wikilink]]` detection for Obsidian-based workflows.
 - **Multi-Path Scanning** — Aggregate notes from multiple content directories (e.g., `docs`, `blog`) in a single graph.
 - **Deep Navigation** — Automatic URL mapping that preserves nested folder structures and respects frontmatter `slug` overrides.
 - **Content Preview** — Hover or click any document node to see a summary preview and its tags in a side panel.
@@ -39,9 +41,11 @@ module.exports = {
     [
       'docusaurus-plugin-graph-view',
       {
-        paths: ['docs'],         // Directories to scan for .md/.mdx files
-        routePath: '/graph',     // Route where the graph page will be accessible
+        paths: ['docs'],          // Directories to scan for .md/.mdx files
+        routePath: '/graph',      // Route where the graph page will be accessible
         title: 'Knowledge Graph', // Page title
+        linkDetection: true,      // Detect inline [links](./path.md) between docs
+        wikilinks: false,         // Detect [[wikilinks]] (for Obsidian users)
       },
     ],
   ],
@@ -52,18 +56,21 @@ Then visit `/graph` on your site to see the interactive knowledge graph.
 
 ### Configuration Options
 
-| Option      | Type       | Default              | Description                                      |
-|-------------|------------|----------------------|--------------------------------------------------|
-| `paths`     | `string[]` | `['docs']`           | Content directories to scan for Markdown files.  |
-| `routePath` | `string`   | `'/graph'`           | URL route for the graph page.                    |
-| `title`     | `string`   | `'Knowledge Graph'`  | Page title shown in the browser tab.             |
+| Option          | Type       | Default              | Description                                                      |
+|-----------------|------------|----------------------|------------------------------------------------------------------|
+| `paths`         | `string[]` | `['docs']`           | Content directories to scan for Markdown files.                  |
+| `routePath`     | `string`   | `'/graph'`           | URL route for the graph page.                                    |
+| `title`         | `string`   | `'Knowledge Graph'`  | Page title shown in the browser tab.                             |
+| `linkDetection` | `boolean`  | `true`               | Detect inline `[links](./path.md)` between docs and create edges.|
+| `wikilinks`     | `boolean`  | `false`              | Detect `[[wikilinks]]` for Obsidian-based workflows.             |
 
 ### How It Works
 
 1. At build time, the plugin walks every `.md` and `.mdx` file in the configured `paths`.
 2. Frontmatter (`title`, `tags`, `slug`) is extracted via [gray-matter](https://github.com/jonschlinkert/gray-matter).
 3. Each document becomes a node; each tag becomes a hub node. Edges connect documents to their tags.
-4. The graph data is injected as Docusaurus global data and rendered client-side using [react-force-graph-2d](https://github.com/vasturiano/react-force-graph).
+4. A second pass scans document content for inline Markdown links and (optionally) `[[wikilinks]]`, creating doc-to-doc edges.
+5. The graph data is injected as Docusaurus global data and rendered client-side using [react-force-graph-2d](https://github.com/vasturiano/react-force-graph).
 
 ## Contributing
 
