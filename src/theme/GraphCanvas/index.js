@@ -144,7 +144,10 @@ export default function GraphCanvas({ data, searchTerm, onNodeClick, selectedNod
 
     // Set cursor affordance when hovering over nodes
     if (typeof document !== 'undefined') {
-      document.body.style.cursor = node ? 'pointer' : 'default';
+      const canvas = document.querySelector('.scene-container canvas') || document.querySelector('canvas');
+      if (canvas) {
+        canvas.style.cursor = node ? 'pointer' : 'default';
+      }
     }
 
     setHoverNode(node);

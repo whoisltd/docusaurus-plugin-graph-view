@@ -143,8 +143,8 @@ function processNode(node, currentFile, fileMap) {
       }
     }
 
-    // Skip code blocks and inline code — don't process wikilinks inside them
-    if (child.type !== 'code' && child.type !== 'inlineCode') {
+    // Skip code blocks, inline code, and existing links — don't process wikilinks inside them
+    if (child.type !== 'code' && child.type !== 'inlineCode' && child.type !== 'link') {
       processNode(child, currentFile, fileMap);
     }
 

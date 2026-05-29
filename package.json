@@ -27,7 +27,6 @@
     "clsx": "^2.1.1",
     "d3": "^7.9.0",
     "gray-matter": "^4.0.3",
-    "react-force-graph-2d": "^1.29.1",
-    "unist-util-visit": "^5.1.0"
+    "react-force-graph-2d": "^1.29.1"
   }
 }

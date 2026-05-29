@@ -132,8 +132,8 @@ module.exports = function (context, options) {
             // Skip external URLs, anchors-only, protocol links
             if (/^(https?:|mailto:|tel:|#|\/\/)/i.test(rawTarget)) continue;
 
-            // Clean the target: remove query strings and anchors
-            const cleanTarget = decodeURI(rawTarget.split(/[?#]/)[0]).replace(/\\/g, '/');
+            // Clean the target: remove query strings, anchors, and markdown link titles
+            const cleanTarget = decodeURI(rawTarget.split(/[?#\s]/)[0]).replace(/\\/g, '/');
             if (!cleanTarget) continue;
 
             // Resolve relative to current file's directory
