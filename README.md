@@ -50,22 +50,23 @@ module.exports = {
 
 ### Document Connections (How to Link Docs)
 
-The plugin connects nodes in your graph in three ways:
+The plugin connects nodes in your graph in two ways:
 
-1. **Frontmatter Tags**: Group documents visually under tag hub nodes.
+1. **Frontmatter Tags**: Connect documents to Tag Hub nodes (solid lines).
    ```markdown
    ---
    tags: [machine-learning, neural-networks]
    ---
    ```
-2. **Markdown Links**: Create doc-to-doc connections (dashed blue lines).
-   ```markdown
-   Refer to the [Activation Functions](./activation-functions.md) page.
-   ```
-3. **Obsidian-Style Wikilinks** (Requires `wikilinks: true`):
-   ```markdown
-   Refer to the [[activation-functions|Activation Functions]] page.
-   ```
+2. **Doc-to-Doc Connections**: Connect documents directly together (dashed blue lines) using either:
+   * **Standard Markdown Links**:
+     ```markdown
+     Refer to the [Activation Functions](./activation-functions.md) page.
+     ```
+   * **Obsidian-Style Wikilinks** (Requires setting `wikilinks: true`):
+     ```markdown
+     Refer to the [[activation-functions|Activation Functions]] page.
+     ```
 
 #### Optional: Compile [[wikilinks]] inside Docusaurus Pages
 To resolve `[[wikilinks]]` into clickable links on your compiled Docusaurus pages, wire up our companion Remark plugin:
