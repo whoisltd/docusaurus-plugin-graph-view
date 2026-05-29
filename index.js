@@ -9,7 +9,6 @@ module.exports = function (context, options) {
     routePath = '/graph',
     title = 'Knowledge Graph',
     linkDetection = true,
-    wikilinks = false,
   } = options;
 
   return {
@@ -155,24 +154,22 @@ module.exports = function (context, options) {
           }
 
           // --- Wikilinks: [[target]] or [[target|alias]] or [[target#heading]] ---
-          if (wikilinks) {
-            const wikiRegex = /(?<!!)\[\[([^\]]+)\]\]/g;
-            let wikiMatch;
+          const wikiRegex = /(?<!!)\[\[([^\]]+)\]\]/g;
+          let wikiMatch;
 
-            while ((wikiMatch = wikiRegex.exec(markdown)) !== null) {
-              const rawTarget = wikiMatch[1];
-              // Parse: [[target#heading|alias]]
-              const [targetAndHeading] = rawTarget.split('|');
-              const [target] = targetAndHeading.split('#');
-              const cleanTarget = target.trim();
-              if (!cleanTarget) continue;
+          while ((wikiMatch = wikiRegex.exec(markdown)) !== null) {
+            const rawTarget = wikiMatch[1];
+            // Parse: [[target#heading|alias]]
+            const [targetAndHeading] = rawTarget.split('|');
+            const [target] = targetAndHeading.split('#');
+            const cleanTarget = target.trim();
+            if (!cleanTarget) continue;
 
-              // Lookup by title or filename (case-insensitive)
-              const targetDocId = titleToDocId[cleanTarget.toLowerCase()];
+            // Lookup by title or filename (case-insensitive)
+            const targetDocId = titleToDocId[cleanTarget.toLowerCase()];
 
-              if (targetDocId) {
-                addEdge(docId, targetDocId, 'link');
-              }
+            if (targetDocId) {
+              addEdge(docId, targetDocId, 'link');
             }
           }
         });

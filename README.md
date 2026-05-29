@@ -40,8 +40,7 @@ module.exports = {
         paths: ['docs'],          // Directories to scan for .md/.mdx files
         routePath: '/graph',      // Route where the graph page will be accessible
         title: 'Knowledge Graph', // Page title
-        linkDetection: true,      // Detect inline [links](./path.md) between docs
-        wikilinks: false,         // Detect [[wikilinks]] (for Obsidian users)
+        linkDetection: true,      // Detect inline links (markdown & wikilinks) between docs
       },
     ],
   ],
@@ -63,7 +62,7 @@ The plugin connects nodes in your graph in two ways:
      ```markdown
      Refer to the [Activation Functions](./activation-functions.md) page.
      ```
-   * **Obsidian-Style Wikilinks** (Requires setting `wikilinks: true`):
+   * **Obsidian-Style Wikilinks**:
      ```markdown
      Refer to the [[activation-functions|Activation Functions]] page.
      ```
