@@ -67,28 +67,7 @@ The plugin connects nodes in your graph in two ways:
      Refer to the [[activation-functions|Activation Functions]] page.
      ```
 
-#### Optional: Compile [[wikilinks]] inside Docusaurus Pages
-To resolve `[[wikilinks]]` into clickable links on your compiled Docusaurus pages, wire up our companion Remark plugin:
 
-```javascript
-const path = require('path');
-const wikilinkPlugin = require('docusaurus-plugin-graph-view/remark/wikilinkPlugin');
-
-module.exports = {
-  presets: [
-    [
-      'classic',
-      {
-        docs: {
-          remarkPlugins: [
-            [wikilinkPlugin, { siteDir: __dirname, paths: ['docs'] }],
-          ],
-        },
-      },
-    ],
-  ],
-};
-```
 
 ## Styling Customization
 
