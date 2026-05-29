@@ -33,10 +33,11 @@
   top: 20px;
   right: 20px;
   width: 250px;
-  background: rgba(var(--ifm-background-surface-color-rgb), 0.6);
+  background: var(--ifm-background-surface-color);
+  background: rgba(var(--ifm-background-surface-color-rgb, 255, 255, 255), 0.6);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(var(--ifm-color-emphasis-300-rgb), 0.2);
+  border: 1px solid rgba(var(--ifm-color-emphasis-300-rgb, 200, 200, 200), 0.2);
   border-radius: 8px;
   padding: 15px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
@@ -111,10 +112,88 @@
   color: var(--ifm-color-primary);
 }
 
-.legend h4 {
-  margin: 0 0 10px 0;
-  font-size: 14px;
+.filterSection {
+  margin-bottom: 12px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(var(--ifm-color-emphasis-300-rgb), 0.2);
+}
+
+.filterSection h4 {
+  margin: 0 0 8px 0;
+  font-size: 11px;
   text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--ifm-color-emphasis-600);
+}
+
+.filterList {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.filterBtn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 6px 8px;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  background: transparent;
+  cursor: pointer;
+  font-size: 13px;
+  color: var(--ifm-color-emphasis-500);
+  transition: all 0.2s ease;
+  opacity: 0.5;
+}
+
+.filterBtn:hover {
+  background: rgba(var(--ifm-color-emphasis-300-rgb), 0.1);
+}
+
+.filterBtnActive {
+  opacity: 1;
+  color: var(--ifm-font-color-base);
+  background: rgba(var(--ifm-color-emphasis-300-rgb), 0.08);
+}
+
+.filterLine {
+  display: inline-block;
+  width: 20px;
+  height: 0;
+  border-top: 2px solid;
+  flex-shrink: 0;
+}
+
+.filterLine[data-type='tag'] {
+  border-top-style: solid;
+}
+
+.filterLine[data-type='link'] {
+  border-top-style: dashed;
+}
+
+.filterLabel {
+  flex: 1;
+  text-align: left;
+}
+
+.filterCount {
+  font-size: 11px;
+  color: var(--ifm-color-emphasis-500);
+  background: rgba(var(--ifm-color-emphasis-300-rgb), 0.15);
+  padding: 1px 6px;
+  border-radius: 10px;
+  min-width: 20px;
+  text-align: center;
+}
+
+.legend h4 {
+  margin: 0 0 8px 0;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
   color: var(--ifm-color-emphasis-600);
 }
 
@@ -127,15 +206,15 @@
 .legend li {
   display: flex;
   align-items: center;
-  margin-bottom: 8px;
-  font-size: 14px;
+  margin-bottom: 6px;
+  font-size: 13px;
   color: var(--ifm-font-color-base);
 }
 
 .legendColor {
   display: inline-block;
-  width: 12px;
-  height: 12px;
+  width: 10px;
+  height: 10px;
   border-radius: 50%;
   margin-right: 8px;
 }
@@ -143,10 +222,11 @@
 .sideDock {
   width: 350px;
   height: 100%;
-  background: rgba(var(--ifm-background-surface-color-rgb), 0.85);
+  background: var(--ifm-background-surface-color);
+  background: rgba(var(--ifm-background-surface-color-rgb, 255, 255, 255), 0.85);
   backdrop-filter: blur(10px) saturate(180%);
   -webkit-backdrop-filter: blur(10px) saturate(180%);
-  border-left: 1px solid rgba(var(--ifm-color-emphasis-300-rgb), 0.2);
+  border-left: 1px solid rgba(var(--ifm-color-emphasis-300-rgb, 200, 200, 200), 0.2);
   padding: 2rem 1.5rem;
   overflow-y: auto;
   position: relative;
@@ -291,4 +371,43 @@
   background: var(--ifm-color-primary-dark);
   color: white;
   text-decoration: none;
+}
+
+@media (max-width: 768px) {
+  .explorerContainer {
+    flex-direction: column-reverse;
+    height: calc(100vh - 60px);
+  }
+
+  .graphWrapper {
+    width: 100%;
+    height: 100%;
+  }
+
+  .controlPanel {
+    top: 10px;
+    right: 10px;
+    width: 220px;
+    padding: 10px;
+    font-size: 12px;
+  }
+
+  .sideDock {
+    width: 100%;
+    height: 45%;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    z-index: 100;
+    border-left: none;
+    border-top: 1px solid rgba(var(--ifm-color-emphasis-300-rgb, 200, 200, 200), 0.2);
+    padding: 1.5rem 1rem;
+    box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.15);
+    animation: slideUp 0.3s ease-out;
+  }
+}
+
+@keyframes slideUp {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
 }
